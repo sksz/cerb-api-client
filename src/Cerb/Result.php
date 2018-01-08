@@ -16,7 +16,7 @@ class Result
      * @param array $results
      * @param int $total
      */
-    public function __construct(array $results = [], $total)
+    public function __construct(array $results = [], $total = 1)
     {
         $this->results = $results;
         $this->total = $total;

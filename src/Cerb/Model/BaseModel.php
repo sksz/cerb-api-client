@@ -38,29 +38,5 @@ abstract class BaseModel
         return isset($this->attributes[$name]);
     }
 
-    /**
-     * @param stdClass $result
-     * @return Result
-     */
-    public static function convertToResultModels($result)
-    {
-        $models = [];
-        $total = 0;
-        if ($result->results) {
-            $total = $result->total;
-            foreach ($result->results as $result) {
-                $models[] = self::convertToModel($result);
-            }
-        }
-        return new Result($models, $total);
-    }
-
-    /**
-     * @param stdClass $result
-     * @return static
-     */
-    public static function convertToModel($result)
-    {
-        return new static((array)$result);
-    }
+    abstract public function processResult($result);
 }

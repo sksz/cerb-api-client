@@ -41,7 +41,7 @@ class Client
      * @param string $resource
      * @return stdClass
      */
-    public function get($resource)
+    private function get($resource)
     {
         return $this->call('GET', $resource);
     }
@@ -51,7 +51,7 @@ class Client
      * @param null|array|string $payload
      * @return stdClass
      */
-    public function put($resource, $payload = null)
+    private function put($resource, $payload = null)
     {
         return $this->call('PUT', $resource, $payload);
     }
@@ -61,7 +61,7 @@ class Client
      * @param null|array|string $payload
      * @return stdClass
      */
-    public function post($resource, $payload = null)
+    private function post($resource, $payload = null)
     {
         return $this->call('POST', $resource, $payload);
     }
@@ -70,7 +70,7 @@ class Client
      * @param string $resource
      * @return stdClass
      */
-    public function delete($resource)
+    private function delete($resource)
     {
         return $this->call('DELETE', $resource);
     }
@@ -81,28 +81,68 @@ class Client
      * @param null|array|string $payload
      * @return stdClass
      */
-    public function call($verb, $resource, $payload = null)
+    private function call($verb, $resource, $payload = null)
     {
         return $this->curlCaller->call($verb, $resource, $payload);
     }
 
     /**
      * @param array|string $where
-     * @return Result
+     *
+     * @return stdClass
      */
     public function getTickets($where)
     {
-        $result = $this->post('/tickets/search.json', $where);
-        return Ticket::convertToResultModels($result);
+        return $this->post('/tickets/search.json', $where);
     }
 
     /**
-     * @param int $id
-     * @return Ticket
+     * @param array|int $id
+     *
+     * @return stdClass
      */
     public function getTicket($id)
     {
-        $result = $this->get('/tickets/' . $id . '.json');
-        return Ticket::convertToModel($result);
+        return $this->get(sprintf('/tickets/%s.json', $id));
+    }
+
+    /**
+     * @param string $payload
+     *
+     * @return stdClass
+     */
+    public function postTicket($payload)
+    {
+        return $this->post('/tickets/compose.json', $payload);
+    }
+
+    /**
+     * @param string $id Attachement id
+     *
+     * @return stdClass
+     */
+    public function getAttachementDetails($id)
+    {
+        return $this->get(sprintf('/attachments/%s/.json', $id));
+    }
+
+    /**
+     * @param string $id Attachement id
+     *
+     * @return stdClass
+     */
+    public function getAttachementContent($id)
+    {
+        return $this->get(sprintf('/attachments/%s/download.json', $id));
+    }
+
+    /**
+     * @param string $payload
+     *
+     * @return stdClass
+     */
+    public function postAttachement($payload)
+    {
+        return $this->post('/attachments/upload.json', $payload);
     }
 }
